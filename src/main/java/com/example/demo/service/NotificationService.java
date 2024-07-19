@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotificationService {
     private CalendarRepository calendarRepository;
-    private TokenRepository tokenRepository;
+    private TokenRepository tokenRepgitrository;
     private ToDoRepository toDoRepository;
 
     private FcmService fcmService;
