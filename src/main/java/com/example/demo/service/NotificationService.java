@@ -1,6 +1,9 @@
 package com.example.demo.service;
 
+import com.example.demo.domain.Calendar;
+import com.example.demo.domain.Routine;
 import com.example.demo.domain.ToDo;
+import com.example.demo.domain.User;
 import com.example.demo.dto.FcmServiceDto;
 import com.example.demo.repository.CalendarRepository;
 import com.example.demo.repository.RoutineRepository;
@@ -16,23 +19,33 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
-    private CalendarRepository calendarRepository;
-    private TokenRepository tokenRepgitrository;
-    private ToDoRepository toDoRepository;
+    private final CalendarRepository calendarRepository;
+    private final TokenRepository tokenRepgitrository;
+    private final ToDoRepository toDoRepository;
 
-    private FcmService fcmService;
-    private RoutineRepository routineRepository;
+    private final UserService userService;
+    private final FcmService fcmService;
+    private final RoutineRepository routineRepository;
 
     @Scheduled(fixedRate = 60_000)
-    public void checkNotification(){
-        List<ToDo> toDoList = toDoRepository.findAll();
+    public void checkNotification() {
+
+        List<User> userList = userService.findAll();
         LocalTime now = LocalTime.now().withSecond(0).withNano(0);
 
-        for (ToDo todo : toDoList) {
-            if (now.equals(todo.getNotification())) {
-                String token = tokenRepository.findTokenById(todo.getRoutine().getUser().getId());
-                if (token != null) {
-                    fcmService.sendPushNotification(token, "Reminder", todo.getContent());
+        for (User user : userList) {
+            Routine routine = calendarRepository.findByUser(user);
+            if (routine != null) {
+                List<ToDo> toDoList = toDoRepository.findByRoutine(routine);
+                for (ToDo todo : toDoList) {
+                    if (now.equals(todo.getNotification())) {
+                        String token = tokenRepgitrository.findTokenById(user);
+
+                        if (token != null) {
+                            fcmService.sendPushNotification(token, user.getName(), todo.getContent());
+                        }
+                    }
+
                 }
             }
         }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,7 +25,6 @@ public class UserService {
     private final UserRepository userRepository;
     private Long expiredMs = 1000 * 60 * 60L;
 
-
     public UserTokenDto publish_token(User user) {
         UserTokenDto tokenDto = new UserTokenDto();
         tokenDto.setAccessToken(JwtTokenProvider.createJwt(user, secretKey, expiredMs));
@@ -37,5 +37,9 @@ public class UserService {
     public Optional<User> findBySub(String sub){
 
         return Optional.ofNullable(userRepository.findBySub(sub));
+    }
+
+    public List<User> findAll(){
+        return userRepository.findAll();
     }
 }
