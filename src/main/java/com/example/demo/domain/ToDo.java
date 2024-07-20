@@ -3,6 +3,7 @@ package com.example.demo.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
@@ -15,6 +16,9 @@ public class ToDo {
     private LocalTime notification;
     @Column(name="content")
     private String content;
+    @ManyToOne
+    @JoinColumn(name = "calendar_id")
+    private Calendar calendar;
 
     @ManyToOne
     @JoinColumn(name = "routine_id")

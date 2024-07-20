@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -31,23 +32,31 @@ public class NotificationService {
     public void checkNotification() {
 
         List<User> userList = userService.findAll();
-        LocalTime now = LocalTime.now().withSecond(0).withNano(0);
+        LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
 
         for (User user : userList) {
-            Routine routine = calendarRepository.findByUser(user);
-            if (routine != null) {
+            List<Routine> routineList = user.getRoutineList();
+            for(Routine routine : routineList){
                 List<ToDo> toDoList = toDoRepository.findByRoutine(routine);
-                for (ToDo todo : toDoList) {
-                    if (now.equals(todo.getNotification())) {
+                for(ToDo toDo : toDoList){
+                    LocalDateTime todoDateTime = LocalDateTime.of(
+                            calendarRepository.findByRoutine(routine).getYear(),
+                            calendarRepository.findByRoutine(routine).getMonth(),
+                            calendarRepository.findByRoutine(routine).getDay(),
+                            toDo.getNotification().getHour(),
+                            toDo.getNotification().getMinute()
+                    );
+                    if (now.equals(todoDateTime)){
                         String token = tokenRepgitrository.findTokenById(user);
 
                         if (token != null) {
-                            fcmService.sendPushNotification(token, user.getName(), todo.getContent());
+                            fcmService.sendPushNotification(token, user.getName(), toDo.getContent());
                         }
                     }
-
                 }
+
             }
+
         }
     }
 }
