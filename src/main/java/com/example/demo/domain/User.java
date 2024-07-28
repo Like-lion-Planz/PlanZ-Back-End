@@ -38,6 +38,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Routine> routineList = new ArrayList<>();
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Habit habit;
 
     @Builder
     public User(String sub, String name, String email, Provider provider, String image) {

@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
+
 @Table(name = "calendar")
 @Entity
 @Getter
@@ -26,6 +28,11 @@ public class Calendar {
     @ManyToOne
     @JoinColumn(name = "routine_id")
     private Routine routine;
-    @Column(name="mood")
-    private String mood;
+
+    @Enumerated(EnumType.STRING)
+    private Mood mood;
+
+    @Column
+    private LocalTime totalSleep;
+
 }

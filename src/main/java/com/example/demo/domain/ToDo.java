@@ -19,7 +19,8 @@ public class ToDo {
     @ManyToOne
     @JoinColumn(name = "calendar_id")
     private Calendar calendar;
-
+    @Column
+    private boolean notificationIsTrue;
     @ManyToOne
     @JoinColumn(name = "routine_id")
     private Routine routine;
