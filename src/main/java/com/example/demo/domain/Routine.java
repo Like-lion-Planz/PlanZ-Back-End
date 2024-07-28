@@ -16,6 +16,64 @@ public class Routine {
     private Long id;
     @Column(name="start_time")
     private LocalTime startTime;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public LocalTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Calendar> getCalendarList() {
+        return calendarList;
+    }
+
+    public void setCalendarList(List<Calendar> calendarList) {
+        this.calendarList = calendarList;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<ToDo> getToDoList() {
+        return toDoList;
+    }
+
+    public void setToDoList(List<ToDo> toDoList) {
+        this.toDoList = toDoList;
+    }
+
     @Column(name="end_time")
     private LocalTime endTime;
 
