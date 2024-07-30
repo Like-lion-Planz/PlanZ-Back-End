@@ -5,6 +5,7 @@ import com.example.demo.dto.RoutineInfoDto;
 import com.example.demo.dto.RoutineSaveDto;
 import com.example.demo.global.ResponseTemplate;
 import com.example.demo.service.RoutineService;
+import com.example.demo.service.ToDoService;
 import com.google.api.gax.paging.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,10 +23,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoutineController {
     private final RoutineService routineService;
+    private final ToDoService toDoService;
     @PostMapping("/api/createRoutine")
     public ResponseTemplate<?> createRoutine(@RequestBody RoutineSaveDto routineSaveDto){
-        return new ResponseTemplate<>(HttpStatus.OK, "루틴 생성 성공",routineService.createRoutine(routineSaveDto));
-
+        RoutineInfoDto routineInfoDto = routineService.createRoutine(routineSaveDto);
+        toDoService.createAutoTodo(routineInfoDto.getId());
+        return new ResponseTemplate<>(HttpStatus.OK, "루틴 생성 성공", routineInfoDto);
     }
     @GetMapping("/api/routine/{routineId}")
     public ResponseTemplate<?> searchRoutine(@PathVariable("routineId")Long id){

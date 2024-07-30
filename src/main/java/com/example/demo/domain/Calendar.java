@@ -1,63 +1,70 @@
 package com.example.demo.domain;
 
+import com.example.demo.dto.SleepLogDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import lombok.Setter;
-
 import java.time.LocalDate;
-
-import java.time.LocalTime;
+import java.time.Year;
 
 @Table(name = "calendar")
 @Entity
-@Getter
-
-@Setter
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Calendar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-//    @Column(name="year")
-//    private int year;
-//    @Column(name="month")
-//    private int month;
-//    @Column(name="day")
-//    private int day;
-    @Column(name="date")
-    private LocalDate date;
-
     @Column(name="year")
-    private int year;
+    private Long year;
     @Column(name="month")
-    private int month;
+    private Long month;
     @Column(name="day")
-    private int day;
+    private Long day;
 
-    @ManyToOne
+    @Column(name="total_sleep_time")
+    private Long totalSleepTime;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "routine_id")
     private Routine routine;
 
-    @Enumerated(EnumType.STRING)
-    private Mood mood;
+    @Column(name="mood")
+    private String mood;
 
-    @Column
-    private LocalTime totalSleep;
-
-    public Calendar(LocalDate date, User user, Routine routine, Mood mood, LocalTime totalSleep) {
-        this.date = date;
-        this.user = user;
-        this.routine = routine;
-        this.mood = mood;
-        this.totalSleep = totalSleep;
+    public static Calendar makeCalendar(Long year, Long month, Long day, User user){
+        Calendar calendar = new Calendar();
+        calendar.setYear(year);
+        calendar.setMonth(month);
+        calendar.setDay(day);
+        calendar.setUser(user);
+        return calendar;
     }
 
+    public static Calendar createCalendar(LocalDate date, User user, Routine routine, String mood, Long totalSleepTime) {
+        Calendar calendar = new Calendar();
+        calendar.setYear((long) date.getYear());
+        calendar.setMonth((long) date.getMonthValue());
+        calendar.setDay((long) date.getDayOfMonth());
+        calendar.setUser(user);
+        calendar.setRoutine(routine);
+        calendar.setMood(mood);
+        calendar.setTotalSleepTime(totalSleepTime);
+        return calendar;
+    }
+
+    public void setFromSleepLogDto(SleepLogDto sleepLogDto){
+        this.year = (long)sleepLogDto.getDate().getYear();
+        this.month = (long)sleepLogDto.getDate().getMonthValue();
+        this.day = (long)sleepLogDto.getDate().getDayOfMonth();
+        this.totalSleepTime = sleepLogDto.getSleepTime();
+        this.mood = sleepLogDto.getMood();
+    }
 }

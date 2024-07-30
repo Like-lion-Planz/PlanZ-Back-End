@@ -44,12 +44,11 @@ public class NotificationService {
                     List<Calendar> calendars = calendarRepository.findByRoutine(routine);
                     for (Calendar calendar : calendars) {
                         LocalDateTime todoDateTime = LocalDateTime.of(
-
-                                calendar.getDate().getYear(),
-                                calendar.getDate().getMonthValue(),
-                                calendar.getDate().getDayOfMonth(),
-                                toDo.getNotification().getHour(),
-                                toDo.getNotification().getMinute()
+                                Math.toIntExact(calendar.getYear()),
+                                Math.toIntExact(calendar.getMonth()),
+                                Math.toIntExact(calendar.getDay()),
+                                (int) toDo.getNotification().getHour(),
+                                (int) toDo.getNotification().getMinute()
                         );
                         if (now.equals(todoDateTime)) {
                             String token = tokenRepgitrository.findTokenById(user);

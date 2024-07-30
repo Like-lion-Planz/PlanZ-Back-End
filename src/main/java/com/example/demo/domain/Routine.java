@@ -83,7 +83,7 @@ public class Routine {
     @OneToMany(mappedBy = "routine", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Calendar> calendarList = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
