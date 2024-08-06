@@ -2,15 +2,12 @@ package com.example.demo.dto;
 
 import com.example.demo.domain.Routine;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
+import java.util.List;
 
-public record RoutineSaveDto(String name, LocalTime startTime, LocalTime endTime) {
+public record RoutineSaveDto(String title, LocalTime startTime, LocalTime endTime, List<LocalDate> dates) {
     public Routine toEntity() {
-        Routine routine = new Routine();
-        routine.setName(name);
-        routine.setStartTime(startTime);
-        routine.setEndTime(endTime);
-        return routine;
+        return new Routine(title, startTime, endTime, dates);
     }
 }

@@ -18,17 +18,17 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class ToDoInfoDto {
-    private LocalTime notification;
+    private LocalTime time;
     private String content;
-    private Calendar calendar;
-    private boolean notificationIsTrue;
-    private Routine routine;
+    private Long toDoId;
+    private boolean notification_is_true;
+
     @Builder
     public ToDoInfoDto(ToDo toDo){
-        this.notification = toDo.getNotification();
-        this.routine = toDo.getRoutine();
+        this.toDoId = toDo.getId();
         this.content = toDo.getContent();
-        this.notificationIsTrue = toDo.isNotificationIsTrue();
+        this.time = toDo.getNotification();
+        this.notification_is_true = toDo.isNotificationIsTrue();
     }
 
 }

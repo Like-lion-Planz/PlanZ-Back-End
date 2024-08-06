@@ -34,8 +34,8 @@ public class Habit {
     @Column(name = "exercise_supplements")
     private boolean exerciseSupplements;
 
-    @Column(name = "not_applicable")
-    private boolean notApplicable;
+    @Column(name = "work out")
+    private boolean workOut;
 
     @Column(name = "omega3")
     private boolean omega3;
@@ -60,7 +60,7 @@ public class Habit {
         habit.coffee = habitDto.isCoffee();
         habit.electronicDevices = habitDto.isElectronicDevices();
         habit.exerciseSupplements = habitDto.isExerciseSupplements();
-        habit.notApplicable = habitDto.isNotApplicable();
+        habit.workOut = habitDto.isWorkOut();
         habit.omega3 = habitDto.isOmega3();
         habit.smoking = habitDto.isSmoking();
         habit.tonic = habitDto.isTonic();

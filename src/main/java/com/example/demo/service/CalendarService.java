@@ -56,13 +56,34 @@ public class CalendarService {
                     user,
                     routine,
                     null, // Mood는 null로 설정 또는 필요한 경우 기본값을 설정하세요.
-                    null  // totalSleepTime은 null로 설정 또는 필요한 경우 기본값을 설정하세요.
+                    null  // totalSleep은 null로 설정 또는 필요한 경우 기본값을 설정하세요.
             );
 
             calendarRepository.save(calendar);
         }
         return true;
     }
+
+    public boolean saveRoutineDates(Long id, List<LocalDate> dates){
+        User user = userService.findByUser();
+        Routine routine = routineRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("루틴을 찾을 수 없습니다."));
+
+        for (LocalDate date : dates) {
+            Calendar calendar = Calendar.createCalendar(
+                    date,
+                    user,
+                    routine,
+                    null, // Mood는 null로 설정 또는 필요한 경우 기본값을 설정하세요.
+                    null  // totalSleep은 null로 설정 또는 필요한 경우 기본값을 설정하세요.
+            );
+
+            calendarRepository.save(calendar);
+        }
+        return true;
+    }
+
+
 
 
 

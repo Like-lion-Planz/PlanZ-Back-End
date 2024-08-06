@@ -51,7 +51,6 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userSub = authentication.getName();
         return userRepository.findBySub(userSub);
-
     }
     public List<User> findAll(){
         return userRepository.findAll();

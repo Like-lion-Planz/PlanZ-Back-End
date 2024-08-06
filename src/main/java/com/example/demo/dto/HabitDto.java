@@ -20,7 +20,7 @@ public class HabitDto {
 
     private boolean exerciseSupplements;
 
-    private boolean notApplicable;
+    private boolean workOut;
 
     private boolean omega3;
 
@@ -39,7 +39,7 @@ public class HabitDto {
         habitDto.coffee = habit.isCoffee();
         habitDto.electronicDevices = habit.isElectronicDevices();
         habitDto.exerciseSupplements = habit.isExerciseSupplements();
-        habitDto.notApplicable = habit.isNotApplicable();
+        habitDto.workOut = habit.isWorkOut();
         habitDto.omega3 = habit.isOmega3();
         habitDto.smoking = habit.isSmoking();
         habitDto.tonic = habit.isTonic();

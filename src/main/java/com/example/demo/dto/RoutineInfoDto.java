@@ -1,5 +1,6 @@
 package com.example.demo.dto;
 
+
 import com.example.demo.domain.Routine;
 import com.example.demo.domain.ToDo;
 import lombok.Builder;
@@ -17,25 +18,21 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 public class RoutineInfoDto {
-    private LocalTime endTime;
-    private LocalTime startTime;
     private List<ToDoInfoDto> toDoList;
-    private String name;
-    private Long id;
+    private String routineName;
+    private Long routineId;
     @Builder
-    public RoutineInfoDto(Routine routine){
-        this.id = routine.getId();
-        this.endTime = routine.getEndTime();
-        this.name = routine.getName();
-        this.startTime = routine.getStartTime();
+    public RoutineInfoDto(Routine routine,Long id){
+        this.routineId = routine.getId();
+        this.routineName = routine.getTitle();
         this.toDoList = routine.getToDoList().stream()
                 .map(ToDoInfoDto::new)
                 .collect(Collectors.toList());
     }
-//    public RoutineInfoDto(Routine routine){
-//        this.name = routine.getName();
-//        this.id = routine.getId();
-//
-//    }
+    public RoutineInfoDto(Routine routine){
+        this.routineName = routine.getTitle();
+        this.routineId = routine.getId();
+        this.toDoList=null;
+    }
 
 }

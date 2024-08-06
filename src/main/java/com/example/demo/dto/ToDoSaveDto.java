@@ -10,7 +10,7 @@ public record ToDoSaveDto(String content, LocalTime time) {
         ToDo toDo = new ToDo();
         toDo.setContent(content);
         toDo.setNotification(time);
+        toDo.setNotificationIsTrue(true);
         return toDo;
     }
 }
-

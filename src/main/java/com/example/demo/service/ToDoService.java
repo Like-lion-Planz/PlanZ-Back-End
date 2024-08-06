@@ -8,20 +8,12 @@ import com.example.demo.dto.ToDoInfoDto;
 import com.example.demo.dto.ToDoSaveDto;
 import com.example.demo.repository.RoutineRepository;
 import com.example.demo.repository.ToDoRepository;
-import com.google.gson.Gson;
-import com.nimbusds.oauth2.sdk.Request;
 import lombok.RequiredArgsConstructor;
-import okhttp3.*;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -31,58 +23,21 @@ public class ToDoService {
     private final UserService userService;
     private final RoutineRepository routineRepository;
     private final ToDoRepository toDoRepository;
-
-    private final OkHttpClient httpClient = new OkHttpClient();
-    private final Gson gson = new Gson();
-
-    @Value("${openai.secret-key}")
-    private String apiKey;
-
     public ToDoInfoDto createToDo(Long id, ToDoSaveDto toDoSaveDto){
         User user = userService.findByUser();
         ToDo toDo = toDoSaveDto.toEntity();
         Routine routine = (Routine) routineRepository.findRoutineByUserAndId(user,id);
+        for(ToDo existingToDo : routine.getToDoList()){
+            if(existingToDo.getNotification().equals(toDo.getNotification())){
+                throw new ResponseStatusException(HttpStatus.CONFLICT,
+                        "이미 해당 시간에 할 일이 존재합니다.");
+            }
+        }
         toDo.setRoutine(routine);
         toDoRepository.save(toDo);
         return new ToDoInfoDto(toDo);
     }
 
-    /*
-    public String createGptTodo(String routine) throws IOException {
-        String jsonPayload = gson.toJson(buildTodoPayload(routine));
-        System.out.println("JSON payload: " + jsonPayload);
-
-        MediaType JSON = MediaType.get("application/json; charset=utf-8");
-
-        okhttp3.RequestBody body = okhttp3.RequestBody.create(jsonPayload, JSON);
-
-        okhttp3.Request request = new okhttp3.Request.Builder()
-                .url("https://api.openai.com/v1/chat/completions")
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Authorization", "Bearer " + apiKey)
-                .post(body)
-                .build();
-
-        // Response 처리
-        try (Response response = httpClient.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-            return response.body().string();
-        }
-    }
-
-    private Map<String, Object> buildTodoPayload(String routine) {
-        Map<String, Object> message = new HashMap<>();
-        message.put("role", "user");
-        message.put("content", "해당 루틴을 보고 추천 기상시간과 취침시간 데이터 추가해서 json형태로만 반환해줘 " + routine);
-
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("model", "gpt-4");
-        payload.put("messages", new Object[]{message});
-        payload.put("max_tokens", 300);
-
-        return payload;
-    }
-*/
     public boolean delete(Long routineId,Long toDoId){
         User user = userService.findByUser();
         Optional<ToDo> optionalToDo = toDoRepository.findById(toDoId);
@@ -140,11 +95,5 @@ public class ToDoService {
         } else {
             throw new RuntimeException("ToDo를 찾을 수 없습니다.");
         }
-    }
-
-    public void createAutoTodo(Long routineId){
-        User user = userService.findByUser();
-        Routine routine = routineRepository.findRoutineByUserAndId(user, routineId);
-
     }
 }

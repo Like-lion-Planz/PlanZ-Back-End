@@ -37,7 +37,8 @@ public class Calendar {
     private Routine routine;
 
     @Column(name="mood")
-    private String mood;
+    @Enumerated(EnumType.STRING)
+    private Mood mood;
 
     public static Calendar makeCalendar(Long year, Long month, Long day, User user){
         Calendar calendar = new Calendar();
@@ -48,7 +49,7 @@ public class Calendar {
         return calendar;
     }
 
-    public static Calendar createCalendar(LocalDate date, User user, Routine routine, String mood, Long totalSleepTime) {
+    public static Calendar createCalendar(LocalDate date, User user, Routine routine, Mood mood, Long totalSleepTime) {
         Calendar calendar = new Calendar();
         calendar.setYear((long) date.getYear());
         calendar.setMonth((long) date.getMonthValue());

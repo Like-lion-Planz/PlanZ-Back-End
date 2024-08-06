@@ -1,53 +1,55 @@
 package com.example.demo.controller;
 
-import com.example.demo.domain.Routine;
 import com.example.demo.dto.RoutineInfoDto;
 import com.example.demo.dto.RoutineSaveDto;
 import com.example.demo.global.ResponseTemplate;
 import com.example.demo.service.RoutineService;
-import com.example.demo.service.ToDoService;
-import com.google.api.gax.paging.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class RoutineController {
     private final RoutineService routineService;
-    private final ToDoService toDoService;
     @PostMapping("/api/createRoutine")
-    public ResponseTemplate<?> createRoutine(@RequestBody RoutineSaveDto routineSaveDto){
-        RoutineInfoDto routineInfoDto = routineService.createRoutine(routineSaveDto);
-        toDoService.createAutoTodo(routineInfoDto.getId());
-        return new ResponseTemplate<>(HttpStatus.OK, "루틴 생성 성공", routineInfoDto);
+    public ResponseEntity<?> createRoutine(@RequestBody RoutineSaveDto routineSaveDto) throws IOException {
+        routineService.createRoutine(routineSaveDto);
+        return ResponseEntity.ok("success");
+        //return new ResponseTemplate<>(HttpStatus.OK, "루틴 생성 성공",routineService.createRoutine(routineSaveDto));
     }
+
     @GetMapping("/api/routine/{routineId}")
-    public ResponseTemplate<?> searchRoutine(@PathVariable("routineId")Long id){
-        return new ResponseTemplate<>(HttpStatus.OK, "해당 루틴 조회 성공",routineService.getMyRoutine(id));
+    public ResponseEntity<?> searchRoutine(@PathVariable("routineId")Long id){
+        RoutineInfoDto routineInfoDto = routineService.getMyRoutine(id);
+        return ResponseEntity.ok(routineInfoDto);
     }
+
     @GetMapping("/api/routine")
-    public ResponseTemplate<?> myAllRoutine(){
-        return new ResponseTemplate<>(HttpStatus.OK,"모든 루틴 조회 성공",routineService.myAllRoutine());
+    public ResponseEntity<List<RoutineInfoDto>> myAllRoutine(){
+        List<RoutineInfoDto> routineInfoDtos = routineService.myAllRoutine();
+        return ResponseEntity.ok(routineInfoDtos);
+        //return new ResponseTemplate<>(HttpStatus.OK,"모든 루틴 조회 성공",routineService.myAllRoutine());
     }
+
     @GetMapping("/api/todaysSchedule")
-    public ResponseTemplate<List<RoutineInfoDto>> getTodaysSchedule() {
-        List<RoutineInfoDto> todaysSchedule = routineService.getTodaysSchedule();
-        return new ResponseTemplate<>(HttpStatus.OK, "오늘의 스케줄 조회 성공", todaysSchedule);
+    public  ResponseEntity<?> getTodaysSchedule() {
+        List<RoutineInfoDto> routineInfoDtos = routineService.getTodaysSchedule();
+        return ResponseEntity.ok(routineInfoDtos);
+        //return new ResponseTemplate<>(HttpStatus.OK, "오늘의 스케줄 조회 성공",routineService.getTodaysSchedule());
     }
 
     @GetMapping("/api/schedule/{date}")
-    public ResponseTemplate<List<RoutineInfoDto>> getScheduleByDate(@PathVariable("date") String dateStr) {
+    public ResponseEntity<?> getScheduleByDate(@PathVariable("date") String dateStr) {
         LocalDate date = LocalDate.parse(dateStr); // 날짜 문자열을 LocalDate로 변환
-        List<RoutineInfoDto> schedule = routineService.getScheduleByDate(date);
-        return new ResponseTemplate<>(HttpStatus.OK, "스케줄 조회 성공", schedule);
+        List<RoutineInfoDto> routineInfoDtos = routineService.getScheduleByDate(date);
+        return ResponseEntity.ok(routineInfoDtos);
+        //return new ResponseTemplate<>(HttpStatus.OK, "스케줄 조회 성공", routineService.getScheduleByDate(date));
     }
+
 }

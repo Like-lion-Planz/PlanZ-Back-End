@@ -35,7 +35,7 @@ public class UserController {
     private String googleRedirectUri;
 
     private final TokenService tokenService;
-
+/*
     @PostMapping("/api/login/oauth2/{provider}")
     public String loginPage(Model model) {
         String kakaoLocation = "https://kauth.kakao.com/oauth/authorize";
@@ -46,6 +46,8 @@ public class UserController {
 
         return "login";
     }
+
+*/
     @GetMapping("/api/user")
     public ResponseEntity<?> myPage(Authentication authentication){
         System.out.println(authentication.getName());

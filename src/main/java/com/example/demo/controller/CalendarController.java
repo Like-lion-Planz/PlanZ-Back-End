@@ -11,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,12 +25,10 @@ public class CalendarController {
     private final UserService userService;
 
     @GetMapping("/api/sleepLog/")
-    public ResponseEntity<?> viewSleepLog(Authentication authentication, @RequestBody Map<String, String> data){
+    public ResponseEntity<?> viewSleepLog(Authentication authentication, @RequestParam LocalDateTime date){
         Optional<User> existUser = userService.findBySub(authentication.getName());
         if(existUser.isPresent()) {
             User user = existUser.get();
-            String dateString = data.get("date");
-            LocalDateTime date = LocalDateTime.parse(dateString);
             List<ResponseSleepLogDto> responseSleepLogDtos = calendarService.viewAll(user, date);
             return ResponseEntity.ok(responseSleepLogDtos);
         }
@@ -43,12 +38,10 @@ public class CalendarController {
     }
 
     @GetMapping("/api/sleepDetailLog/")
-    public ResponseEntity<?> viewSleepDetailLog(Authentication authentication, @RequestBody Map<String, String> data){
+    public ResponseEntity<?> viewSleepDetailLog(Authentication authentication, @RequestParam LocalDateTime date){
         Optional<User> existUser = userService.findBySub(authentication.getName());
         if(existUser.isPresent()) {
             User user = existUser.get();
-            String dateString = data.get("date");
-            LocalDateTime date = LocalDateTime.parse(dateString);
             ResponseSleepLogDto responseSleepLogDto = calendarService.viewDetail(user, date);
             return ResponseEntity.ok(responseSleepLogDto);
         }
@@ -71,10 +64,12 @@ public class CalendarController {
     }
 
     @PostMapping("/api/saveRoutineDates")
-    public ResponseTemplate<?> saveRoutineDates(@RequestBody CalendarSaveDto calendarSaveDto) {
+    public ResponseEntity<?> saveRoutineDates(@RequestBody CalendarSaveDto calendarSaveDto) {
         if(calendarService.saveRoutineDates(calendarSaveDto)){
-            return new ResponseTemplate<>(HttpStatus.OK, "루틴 날짜 저장 성공");
+            return ResponseEntity.ok("루틴 날짜 저장 성공");
+            //return new ResponseTemplate<>(HttpStatus.OK, "루틴 날짜 저장 성공");
         }
-        return new ResponseTemplate<>(HttpStatus.OK, "루틴 날짜 저장 실패");
+        return ResponseEntity.badRequest().body("루틴 날짜 저장 실패");
+        //return new ResponseTemplate<>(HttpStatus.OK, "루틴 날짜 저장 실패");
     }
 }

@@ -26,7 +26,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
         log.info("Request URI : {}", requestURI);
 
-        if(requestURI.equals("/") || requestURI.equals("/login")
+        if(requestURI.equals("/") || requestURI.equals("/login") || requestURI.equals("/api/login/oauth2/kakao")
         ){
             filterChain.doFilter(request, response);
             return;

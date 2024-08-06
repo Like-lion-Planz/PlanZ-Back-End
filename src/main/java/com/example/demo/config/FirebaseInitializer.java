@@ -1,5 +1,5 @@
 package com.example.demo.config;
-/*
+
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @Configuration
-
 public class FirebaseInitializer {
 
     @Autowired
@@ -41,6 +40,4 @@ public class FirebaseInitializer {
             e.printStackTrace(); // 여기에 로깅 추가 또는 적절한 예외 처리 필요
         }
     }
-
 }
-*/
